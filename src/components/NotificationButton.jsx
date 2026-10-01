@@ -21,13 +21,6 @@ export default function NotificationButton() {
   const [token, setToken] = useState(null);
   const [status, setStatus] = useState("");
 
-  useEffect(() => {
-    if (permission === "granted" && !token) {
-      fetchToken();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   async function fetchToken() {
     const messaging = await getMessagingIfSupported();
     if (!messaging) {
@@ -57,6 +50,14 @@ export default function NotificationButton() {
       setStatus("Erro ao obter token de push: " + err.message);
     }
   }
+
+  useEffect(() => {
+    if (permission === "granted" && !token) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      fetchToken();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function handleClick() {
     if (!("Notification" in window)) return;

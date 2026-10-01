@@ -58,7 +58,6 @@ export const db = initializeFirestore(firebaseApp, {
 const useEmulators = import.meta.env.VITE_USE_EMULATORS === "true";
 
 if (useEmulators) {
-  // eslint-disable-next-line no-console
   console.info("[firebase] Conectando aos emuladores locais (Auth :9099, Firestore :8080).");
   connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
   connectFirestoreEmulator(db, "127.0.0.1", 8080);
