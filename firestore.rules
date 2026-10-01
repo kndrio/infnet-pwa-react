@@ -1,0 +1,23 @@
+rules_version = '2';
+
+// Regras do Firestore para o app de Tasks.
+//
+// Modelo de dados: coleção "tasks", cada documento tem um campo "uid"
+// com o id do usuário dono da task. A regra abaixo garante que:
+//   - só um usuário autenticado pode ler/escrever;
+//   - um usuário só enxerga e só altera as PRÓPRIAS tasks (uid == auth.uid).
+//
+// Isso substitui, no mundo Firebase, o que antes era "responsabilidade do
+// app" (não havia backend real nas Aulas 3-7): agora quem garante o
+// isolamento dos dados entre usuários é o próprio backend (Firestore),
+// via regras declarativas, não mais código no cliente.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /tasks/{taskId} {
+      allow read, update, delete: if request.auth != null
+                                    && resource.data.uid == request.auth.uid;
+      allow create: if request.auth != null
+                     && request.resource.data.uid == request.auth.uid;
+    }
+  }
+}
